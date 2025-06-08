@@ -8,7 +8,7 @@ logging.basicConfig(
     format='[%(asctime)s] - %(levelname)s - %(message)s'
 )
 
-def get_newest_data_oltp():
+def get_date_latest_export():
 
     load_dotenv()  # charge les variables depuis .env
     logging.info("Chargement des variables d'environnement")

@@ -1,26 +1,22 @@
+import logging
 import os
 import random
 from datetime import datetime, timedelta
 
+import postgres_conn
 import psycopg2
 from dotenv import load_dotenv
 from psycopg2 import sql
 
+logging.basicConfig(
+    level=logging.INFO, format="[%(asctime)s] - %(levelname)s - %(message)s"
+)
+
 
 def generate_fake_data():
 
-    load_dotenv()  # charge les variables depuis .env
-
-    # Configuration de la connexion PostgreSQL
-    conn_params = {
-        "host": os.getenv("DB_HOST"),
-        "port": int(os.getenv("DB_PORT")),
-        "dbname": os.getenv("DB_NAME"),
-        "user": os.getenv("DB_USER"),
-        "password": os.getenv("DB_PASSWORD"),
-    }
-
-    conn = psycopg2.connect(**conn_params)
+    logging.info("Connexion à la base de données...")
+    conn = postgres_conn.postgres_connect()
     cur = conn.cursor()
 
     # 1. Récupérer la dernière orderkey et la dernière date de commande
@@ -31,7 +27,8 @@ def generate_fake_data():
     if last_order_date is None:
         last_order_date = datetime.today()
 
-    print(f"Dernière orderkey: {max_orderkey}, Dernière date: {last_order_date}")
+    logging.info(f"Dernière orderkey: {max_orderkey}, Dernière date: {last_order_date}")
+    logging.info("Génération des nouvelles lignes")
 
     # 2. Récupérer quelques customers au hasard pour assigner aux commandes
     cur.execute("SELECT c_custkey FROM customer ORDER BY random() LIMIT 100;")
@@ -113,6 +110,7 @@ def generate_fake_data():
                 )
             )
 
+    logging.info("Insertion des nouvelles lignes")
     # 5. Insertion dans orders
     insert_orders_query = """
     INSERT INTO orders 
@@ -132,6 +130,5 @@ def generate_fake_data():
 
     # 7. Commit et fermeture
     conn.commit()
-    cur.close()
-    conn.close()
-    print("Insertion terminée : 100 commandes générées avec 3 items chacune.")
+    postgres_conn.postgres_disconnect(cur, conn)
+    logging.info("Insertion terminée : 100 commandes générées avec 3 items chacune.")

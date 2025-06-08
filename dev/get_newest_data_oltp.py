@@ -1,6 +1,7 @@
 import logging
 import os
 
+import postgres_conn
 import psycopg2
 from dotenv import load_dotenv
 
@@ -11,21 +12,9 @@ logging.basicConfig(
 
 def get_date_latest_export():
 
-    load_dotenv()  # charge les variables depuis .env
-    logging.info("Chargement des variables d'environnement")
-
-    # Configuration de la connexion PostgreSQL
-    conn_params = {
-        "host": os.getenv("DB_HOST"),
-        "port": int(os.getenv("DB_PORT")),
-        "dbname": os.getenv("DB_NAME"),
-        "user": os.getenv("DB_USER"),
-        "password": os.getenv("DB_PASSWORD"),
-    }
-
     try:
         logging.info("Connexion à la base de données...")
-        conn = psycopg2.connect(**conn_params)
+        conn = postgres_conn.postgres_connect()
         cur = conn.cursor()
 
         query_last_loaded_date = (
@@ -43,6 +32,7 @@ def get_date_latest_export():
             last_loaded_date = None
             logging.warning("Aucune date trouvée pour 'last_loaded_date'")
 
+        postgres_conn.postgres_disconnect(cur, conn)
         return last_loaded_date
 
     except Exception as e:

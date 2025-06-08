@@ -1,9 +1,7 @@
 import logging
-import os
 
 import postgres_conn
 import psycopg2
-from dotenv import load_dotenv
 
 logging.basicConfig(
     level=logging.INFO, format="[%(asctime)s] - %(levelname)s - %(message)s"

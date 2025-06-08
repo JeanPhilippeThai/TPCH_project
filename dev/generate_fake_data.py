@@ -1,10 +1,11 @@
-import psycopg2
-from psycopg2 import sql
-from datetime import datetime, timedelta
-import random
-
-from dotenv import load_dotenv
 import os
+import random
+from datetime import datetime, timedelta
+
+import psycopg2
+from dotenv import load_dotenv
+from psycopg2 import sql
+
 
 def generate_fake_data():
 
@@ -12,11 +13,11 @@ def generate_fake_data():
 
     # Configuration de la connexion PostgreSQL
     conn_params = {
-        'host': os.getenv('DB_HOST'),
-        'port': int(os.getenv('DB_PORT')),
-        'dbname': os.getenv('DB_NAME'),
-        'user': os.getenv('DB_USER'),
-        'password': os.getenv('DB_PASSWORD')
+        "host": os.getenv("DB_HOST"),
+        "port": int(os.getenv("DB_PORT")),
+        "dbname": os.getenv("DB_NAME"),
+        "user": os.getenv("DB_USER"),
+        "password": os.getenv("DB_PASSWORD"),
     }
 
     conn = psycopg2.connect(**conn_params)
@@ -50,39 +51,67 @@ def generate_fake_data():
         order_date = last_order_date + timedelta(days=i)
 
         # Autres champs nécessaires dans orders (peut varier selon schéma)
-        order_status = 'O'
+        order_status = "O"
         totalprice = 0.0  # on peut calculer plus tard si besoin
-        clerk = f'Clerk#{random.randint(1000, 9999)}'
+        clerk = f"Clerk#{random.randint(1000, 9999)}"
         shippriority = 0
-        comment = 'New generated order'
-        orderpriority = random.choice(['1-URGENT', '2-HIGH', '3-MEDIUM', '4-NOT SPECIFIED', '5-LOW'])
+        comment = "New generated order"
+        orderpriority = random.choice(
+            ["1-URGENT", "2-HIGH", "3-MEDIUM", "4-NOT SPECIFIED", "5-LOW"]
+        )
 
-        new_orders.append((orderkey, custkey, order_status, order_date, totalprice, orderpriority, clerk, shippriority, comment))
+        new_orders.append(
+            (
+                orderkey,
+                custkey,
+                order_status,
+                order_date,
+                totalprice,
+                orderpriority,
+                clerk,
+                shippriority,
+                comment,
+            )
+        )
 
         # Pour chaque commande, 3 items
         for j in range(3):
             line_number = j + 1
-            partkey = parts[(i-1)*3 + j]  # 3 parts par commande
+            partkey = parts[(i - 1) * 3 + j]  # 3 parts par commande
             suppkey = random.randint(1, 100)  # suppkey aléatoire, adapter si besoin
             quantity = random.randint(1, 50)
             extendedprice = quantity * random.uniform(10.0, 100.0)
             discount = round(random.uniform(0, 0.1), 2)
             tax = round(random.uniform(0, 0.08), 2)
-            returnflag = 'N'
-            linestatus = 'O'
+            returnflag = "N"
+            linestatus = "O"
             shipdate = order_date + timedelta(days=random.randint(1, 30))
             commitdate = order_date + timedelta(days=random.randint(1, 30))
             receiptdate = order_date + timedelta(days=random.randint(1, 30))
-            shipinstruct = 'DELIVER IN PERSON'
-            shipmode = 'AIR'
-            comment_line = 'New generated lineitem'
+            shipinstruct = "DELIVER IN PERSON"
+            shipmode = "AIR"
+            comment_line = "New generated lineitem"
 
-            new_lineitems.append((
-                orderkey, line_number, partkey, suppkey, quantity, extendedprice,
-                discount, tax, returnflag, linestatus,
-                shipdate, commitdate, receiptdate,
-                shipinstruct, shipmode, comment_line
-            ))
+            new_lineitems.append(
+                (
+                    orderkey,
+                    line_number,
+                    partkey,
+                    suppkey,
+                    quantity,
+                    extendedprice,
+                    discount,
+                    tax,
+                    returnflag,
+                    linestatus,
+                    shipdate,
+                    commitdate,
+                    receiptdate,
+                    shipinstruct,
+                    shipmode,
+                    comment_line,
+                )
+            )
 
     # 5. Insertion dans orders
     insert_orders_query = """
@@ -106,4 +135,3 @@ def generate_fake_data():
     cur.close()
     conn.close()
     print("Insertion terminée : 100 commandes générées avec 3 items chacune.")
-

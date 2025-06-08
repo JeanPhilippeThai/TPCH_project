@@ -4,7 +4,7 @@ import postgres_conn
 import psycopg2
 
 logging.basicConfig(
-    level=logging.INFO, format="[%(asctime)s] - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - [%(levelname)s]  %(message)s"
 )
 
 
@@ -24,7 +24,8 @@ def get_date_latest_export():
         if result:
             last_loaded_date = result[1]
             logging.info(
-                f"Date de la derniere transaction exportée vers BigQuery: {last_loaded_date}"
+                "Date de la derniere transaction exportée vers BigQuery: %s",
+                last_loaded_date,
             )
         else:
             last_loaded_date = None
@@ -34,5 +35,5 @@ def get_date_latest_export():
         return last_loaded_date
 
     except Exception as e:
-        logging.error(f"Erreur lors de l'accès à la base de données: {e}")
+        logging.error("Erreur lors de l'accès à la base de données: %s", e)
         return None

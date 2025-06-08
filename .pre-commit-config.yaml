@@ -3,6 +3,7 @@ repos:
     rev: 24.3.0
     hooks:
       - id: black
+        args: [--skip-string-normalization]
 
   - repo: https://github.com/pre-commit/mirrors-isort
     rev: v5.10.1
@@ -14,3 +15,16 @@ repos:
     hooks:
       - id: autoflake
         args: ["--remove-all-unused-imports", "--remove-unused-variables"]
+
+  - repo: https://github.com/pycqa/pylint
+    rev: v3.1.0
+    hooks:
+      - id: pylint
+        additional_dependencies: [psycopg2-binary, python-dotenv]
+        args:
+          - --score=no
+          - --disable=
+              missing-module-docstring,
+              missing-function-docstring,
+              too-many-locals,
+              logging-fstring-interpolation

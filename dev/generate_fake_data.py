@@ -7,7 +7,7 @@ import psycopg2
 from psycopg2 import sql
 
 logging.basicConfig(
-    level=logging.INFO, format="[%(asctime)s] - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - [%(levelname)s]  %(message)s"
 )
 
 
@@ -25,7 +25,9 @@ def generate_fake_data():
     if last_order_date is None:
         last_order_date = datetime.today()
 
-    logging.info(f"Dernière orderkey: {max_orderkey}, Dernière date: {last_order_date}")
+    logging.info(
+        "Dernière orderkey: %s , dernière data: %s", max_orderkey, last_order_date
+    )
     logging.info("Génération des nouvelles lignes")
 
     # 2. Récupérer quelques customers au hasard pour assigner aux commandes
@@ -73,7 +75,8 @@ def generate_fake_data():
         for j in range(3):
             line_number = j + 1
             partkey = parts[(i - 1) * 3 + j]  # 3 parts par commande
-            suppkey = random.randint(1, 100)  # suppkey aléatoire, adapter si besoin
+            # suppkey aléatoire, adapter si besoin
+            suppkey = random.randint(1, 100)
             quantity = random.randint(1, 50)
             extendedprice = quantity * random.uniform(10.0, 100.0)
             discount = round(random.uniform(0, 0.1), 2)
@@ -111,7 +114,7 @@ def generate_fake_data():
     logging.info("Insertion des nouvelles lignes")
     # 5. Insertion dans orders
     insert_orders_query = """
-    INSERT INTO orders 
+    INSERT INTO orders
     (o_orderkey, o_custkey, o_orderstatus, o_orderdate, o_totalprice, o_orderpriority, o_clerk, o_shippriority, o_comment)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
     """
@@ -119,7 +122,7 @@ def generate_fake_data():
 
     # 6. Insertion dans lineitem
     insert_lineitems_query = """
-    INSERT INTO lineitem 
+    INSERT INTO lineitem
     (l_orderkey, l_linenumber, l_partkey, l_suppkey, l_quantity, l_extendedprice, l_discount, l_tax,
      l_returnflag, l_linestatus, l_shipdate, l_commitdate, l_receiptdate, l_shipinstruct, l_shipmode, l_comment)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);

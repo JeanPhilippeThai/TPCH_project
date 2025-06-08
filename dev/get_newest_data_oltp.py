@@ -1,3 +1,5 @@
+"""Module pour récupérer la date de la dernière transaction qui a été exporté vers BigQuery"""
+
 import logging
 
 import postgres_conn
@@ -9,6 +11,7 @@ logging.basicConfig(
 
 
 def get_date_latest_export():
+    """Récupére la date de la dernière transaction qui a été exporté vers BigQuery"""
 
     try:
         logging.info("Connexion à la base de données...")

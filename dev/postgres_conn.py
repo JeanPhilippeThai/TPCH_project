@@ -1,3 +1,5 @@
+""" Module de connection à Postgres """
+
 import logging
 import os
 
@@ -10,6 +12,7 @@ logging.basicConfig(
 
 
 def postgres_connect():
+    """Connection à Postgres"""
 
     logging.info("Chargement des variables d'environnement")
     load_dotenv()  # charge les variables depuis .env
@@ -29,6 +32,7 @@ def postgres_connect():
 
 
 def postgres_disconnect(cur, conn):
+    """Deconnection de Postgres"""
     logging.info("Fermeture de la connection Postgres")
     cur.close()
     conn.close()

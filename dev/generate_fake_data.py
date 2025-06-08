@@ -1,3 +1,5 @@
+"""Module pour générer des données fictives pour l'OLTP Postgres"""
+
 import logging
 import random
 from datetime import datetime, timedelta
@@ -12,6 +14,7 @@ logging.basicConfig(
 
 
 def generate_fake_data():
+    """Génère des données fictives pour Postgres"""
 
     logging.info("Connexion à la base de données...")
     conn = postgres_conn.postgres_connect()

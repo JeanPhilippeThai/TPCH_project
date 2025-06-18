@@ -17,3 +17,6 @@
 - Certaines données sont analysées en AB testing dont les rappports sont envoyés par mail à N8N aux stakeholders
 - Census permet le reverse ETL (vers un CRM par exemple)
 - PowerBI permet la visualisation
+
+**Evolutions possibles**:
+Intégration de Trino, Kafka, Pathway

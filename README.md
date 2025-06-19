@@ -19,4 +19,4 @@
 - PowerBI permet la visualisation
 
 **Evolutions possibles**:
-Intégration de Trino, Kafka, Pathway
+Intégration de Trino, Kafka, Pathway, Druid, Superset
